@@ -1,44 +1,57 @@
 const key = "57ed5e17c20941aabcb144236231811";
 
 async function getWeather(city) {
-    const respone = await fetch(`http://api.weatherapi.com/v1/current.json?key=57ed5e17c20941aabcb144236231811&q=${city}`)
+    const respone = await fetch(`http://api.weatherapi.com/v1/current.json?key=57ed5e17c20941aabcb144236231811&q=${city}`);
     const weather = await respone.json();
-
-    console.log(weather);
     
     displayWeather(weather);
-}   
 
-getWeather("Warsaw");
+    console.log(weather);
+}
+
+function displayWeather(weatherData) {
+    const city = document.querySelector("[data-city]");
+    const update = document.querySelector("[data-update]");
+    const temperature = document.querySelector("[data-temperature]");
+    const condition = document.querySelector("[data-condition]");
+    const pressure = document.querySelector("[data-pressure]");
+    const humidity = document.querySelector("[data-humidity]");
+    const wind = document.querySelector("[data-wind]");
+
+    const cityData = weatherData.location.name;
+    const updateData = weatherData.current.last_updated;
+    const temperatureData = weatherData.current.temp_c;
+    const conditionData = weatherData.current.condition.text;
+    const pressureData = weatherData.current.pressure_mb;
+    const humidityData = weatherData.current.humidity;
+    const windData = weatherData.current.wind_kph;
+
+    city.innerText = cityData;
+    update.innerText = updateData;
+    temperature.innerText = temperatureData + "°";
+    condition.innerText = conditionData;
+    pressure.innerText = pressureData + "hpa";
+    humidity.innerText = humidityData + "%";
+    wind.innerText = windData + "km/h";
+}
+
+getWeather("London");
 
 
 
 
 
-// function displayWeather(weatherData) {
-//     const temp = document.querySelector(".temperature");
-//     const img = document.querySelector(".img")
 
-//     temp.innerText = `${weatherData.current.temp_c}C`
-//     img.src = weatherData.current.condition.icon
-// }
+
+
+
+
+
 
 
 // function displayForecast() {
 
 // }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // fetch(`http://api.weatherapi.com/v1/search.json?key=${key}&q=Biels`)
