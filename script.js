@@ -85,6 +85,7 @@ form.addEventListener("submit", (event) => {
     const input = document.querySelector("input");
 
     getWeather(input.value);
+    form.reset()
 });
 
 // fetch(`http://api.weatherapi.com/v1/search.json?key=${key}&q=Biels`)
