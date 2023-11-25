@@ -1,12 +1,13 @@
 const key = "57ed5e17c20941aabcb144236231811";
 
 async function getWeather(city) {
-    const respone = await fetch(`http://api.weatherapi.com/v1/current.json?key=57ed5e17c20941aabcb144236231811&q=${city}`);
+    const respone = await fetch(
+        `http://api.weatherapi.com/v1/current.json?key=57ed5e17c20941aabcb144236231811&q=${city}`
+    );
     const weather = await respone.json();
-    
-    displayWeather(weather);
 
-    console.log(weather);
+    displayWeather(weather);
+    handleWeatherIcon(weather);
 }
 
 function displayWeather(weatherData) {
@@ -28,11 +29,48 @@ function displayWeather(weatherData) {
 
     city.innerText = cityData;
     update.innerText = updateData;
-    temperature.innerText = temperatureData + "°";
+    temperature.innerText = temperatureData + "°C";
     condition.innerText = conditionData;
     pressure.innerText = pressureData + "hpa";
     humidity.innerText = humidityData + "%";
     wind.innerText = windData + "km/h";
+}
+
+function handleWeatherIcon(weather) {
+    const conditionCode = weather.current.condition.code;
+    const isDay = weather.current.is_day;
+
+    if (isDay) {
+        displayWeatherIcon("day", conditionCode);
+    } else {
+        displayWeatherIcon("night", conditionCode);
+    }
+}
+
+function displayWeatherIcon(timeOfTheDay, conditionCode) {
+    const weatherIcon = document.querySelector("[data-icon]");
+
+    const clouds = [1003, 1006, 1009, 1030, 1135];
+    const snow = [
+        1114, 1117, 1147, 1210, 1213, 1216, 1219, 1222, 1225, 1237, 1255, 1258,
+        1261, 1264,
+    ];
+    const rain = [
+        1063, 1066, 1069, 1072, 1150, 1153, 1168, 1171, 1180, 1183, 1186, 1189,
+        1192, 1195, 1198, 1201, 1204, 1207,
+    ];
+
+    if (conditionCode === 1000) {
+        weatherIcon.src = `./assets/${timeOfTheDay}-clear.png`;
+    } else if (clouds.includes(conditionCode)) {
+        weatherIcon.src = `./assets/${timeOfTheDay}-clouds.png`;
+    } else if (snow.includes(conditionCode)) {
+        weatherIcon.src = `./assets/${timeOfTheDay}-snow.png`;
+    } else if (rain.includes(conditionCode)) {
+        weatherIcon.src = `./assets/${timeOfTheDay}-rain.png`;
+    } else {
+        weatherIcon.src = `./assets/${timeOfTheDay}-storm.png`;
+    }
 }
 
 getWeather("London");
@@ -40,19 +78,14 @@ getWeather("London");
 
 
 
+const form = document.querySelector("form");
 
+form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const input = document.querySelector("input");
 
-
-
-
-
-
-
-
-// function displayForecast() {
-
-// }
-
+    getWeather(input.value);
+});
 
 // fetch(`http://api.weatherapi.com/v1/search.json?key=${key}&q=Biels`)
 //     .then(respone => respone.json())
